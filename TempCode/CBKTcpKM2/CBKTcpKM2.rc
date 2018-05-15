@@ -66,8 +66,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,26
- PRODUCTVERSION 1,0,0,26
+ FILEVERSION 1,0,0,23
+ PRODUCTVERSION 1,0,0,23
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -82,17 +82,17 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "Comments", "KM2考车数据传输模块8889版本\0"
+            VALUE "Comments", "KM2考车数据传输模块\0"
             VALUE "CompanyName", "福州北科大舟宇电子有限公司\0"
-            VALUE "FileDescription", "Build 20170313 1416\0"
-            VALUE "FileVersion", "1, 0, 0, 26\0"
+            VALUE "FileDescription", "Build 20171010 1033\0"
+            VALUE "FileVersion", "1, 0, 0, 23\0"
             VALUE "InternalName", "CBKTcpKM2\0"
             VALUE "LegalCopyright", "版权所有 (C) 2014 ZSZ 2014-05-26\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "CBKTcpKM2.DLL\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "CBKTcpKM2 Dynamic Link Library\0"
-            VALUE "ProductVersion", "1, 0, 0, 26\0"
+            VALUE "ProductVersion", "1, 0, 0, 23\0"
             VALUE "SpecialBuild", "\0"
         END
     END
