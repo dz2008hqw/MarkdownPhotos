@@ -1,0 +1,45 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CBKTcpKM2 - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Release/CBKTcpKM2.res" /d "NDEBUG" /d "_AFXDLL" "F:\139\4h1\TCP监管平台通讯DLL新接口\CBKTcpKM2.rc"" 
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF320.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /FR"Release/" /Fp"Release/CBKTcpKM2.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\139\4h1\TCP监管平台通讯DLL新接口\CBKTcpKM2.cpp"
+]
+Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPF320.tmp" 
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF321.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /FR"Release/" /Fp"Release/CBKTcpKM2.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"F:\139\4h1\TCP监管平台通讯DLL新接口\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPF321.tmp" 
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF322.tmp" with contents
+[
+/nologo /subsystem:windows /dll /incremental:no /pdb:"Release/CBKTcpKM2.pdb" /machine:I386 /def:".\CBKTcpKM2.def" /out:"Release/CBKTcpKM2.dll" /implib:"Release/CBKTcpKM2.lib" 
+".\Release\CBKTcpKM2.obj"
+".\Release\StdAfx.obj"
+".\Release\CBKTcpKM2.res"
+]
+Creating command line "link.exe @C:\Users\HQW\AppData\Local\Temp\RSPF322.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+CBKTcpKM2.cpp
+Linking...
+   Creating library Release/CBKTcpKM2.lib and object Release/CBKTcpKM2.exp
+
+
+
+<h3>Results</h3>
+CBKTcpKM2.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
