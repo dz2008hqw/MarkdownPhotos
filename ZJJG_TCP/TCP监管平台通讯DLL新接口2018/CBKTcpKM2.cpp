@@ -83,7 +83,8 @@ DWORD WINAPI SendThreadProc(LPVOID param)
 		}
 		else
 		{
-			Sleep(1000);
+			Sleep(100);
+			//Sleep(1000);
 //			Sleep(5000);
 		}
 	}
@@ -846,7 +847,8 @@ BOOL CCBKTcpKM2App::SendData()
 		//WriteLog("没有要发送的数据!,size=0");
 		return FALSE;
 	}
-	if (timeGetTime()-sendtime<900)
+	//if (timeGetTime()-sendtime<900)
+	if (timeGetTime()-sendtime<100)
 	{
 		return TRUE;
 	}
