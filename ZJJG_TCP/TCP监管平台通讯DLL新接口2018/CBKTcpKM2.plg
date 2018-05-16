@@ -7,26 +7,26 @@
 </h3>
 <h3>Command Lines</h3>
 Creating command line "rc.exe /l 0x804 /fo"Release/CBKTcpKM2.res" /d "NDEBUG" /d "_AFXDLL" "D:\Users\Hqw\Documents\Work\北科舟宇\project\code\MarkdownPhotos\ZJJG_TCP\TCP监管平台通讯DLL新接口2018\CBKTcpKM2.rc"" 
-Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPADEB.tmp" with contents
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF18B.tmp" with contents
 [
 /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /FR"Release/" /Fp"Release/CBKTcpKM2.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "D:\Users\Hqw\Documents\Work\北科舟宇\project\code\MarkdownPhotos\ZJJG_TCP\TCP监管平台通讯DLL新接口2018\CBKTcpKM2.cpp"
 ]
-Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPADEB.tmp" 
-Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPADEC.tmp" with contents
+Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPF18B.tmp" 
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF18C.tmp" with contents
 [
 /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /FR"Release/" /Fp"Release/CBKTcpKM2.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "D:\Users\Hqw\Documents\Work\北科舟宇\project\code\MarkdownPhotos\ZJJG_TCP\TCP监管平台通讯DLL新接口2018\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPADEC.tmp" 
-Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPADED.tmp" with contents
+Creating command line "cl.exe @C:\Users\HQW\AppData\Local\Temp\RSPF18C.tmp" 
+Creating temporary file "C:\Users\HQW\AppData\Local\Temp\RSPF18D.tmp" with contents
 [
 /nologo /subsystem:windows /dll /incremental:no /pdb:"Release/CBKTcpKM2.pdb" /machine:I386 /def:".\CBKTcpKM2.def" /out:"Release/CBKTcpKM2.dll" /implib:"Release/CBKTcpKM2.lib" 
 ".\Release\CBKTcpKM2.obj"
 ".\Release\StdAfx.obj"
 ".\Release\CBKTcpKM2.res"
 ]
-Creating command line "link.exe @C:\Users\HQW\AppData\Local\Temp\RSPADED.tmp"
+Creating command line "link.exe @C:\Users\HQW\AppData\Local\Temp\RSPF18D.tmp"
 <h3>Output Window</h3>
 Compiling resources...
 Compiling...
