@@ -69,7 +69,7 @@ CCBKTcpKM2App theApp;
 //int conniT=0;
 DWORD WINAPI SendThreadProc(LPVOID param)
 {
-	theApp.WriteLog("SendThreadProc Create!");
+	theApp.WriteLogOne("发送线程创建 ! SendThreadProc Create!");
 	while (TRUE)
 	{
 		if (theApp.ConnOK==FALSE)
@@ -83,37 +83,63 @@ DWORD WINAPI SendThreadProc(LPVOID param)
 		else
 		{
 			Sleep(1000);
-			//theApp.WriteLogThree("SendThreadProc ");
 		}
 	}
-	theApp.WriteLog("SendThreadProc Close!");
+	theApp.WriteLogOne("发送线程关了 ! SendThreadProc Close!");
 	return 0;
 }
 
-void CCBKTcpKM2App::WriteLog(CString sstr)
+void CCBKTcpKM2App::WriteLogOne(LPCTSTR pstrFormat, ...)
 {
-	CTime curTime =CTime::GetCurrentTime();
-	CString Data=curTime.Format("%H:%M:%S");
+	CString logstr;
+	va_list avlist;
+	va_start(avlist, pstrFormat);
+	logstr.FormatV(pstrFormat, avlist);
+	va_end(avlist);
+
+	CString Data;
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	Data.Format("%02d:%02d:%02d.%03d",st.wHour,st.wMinute,st.wSecond,st.wMilliseconds);
 	FILE *fp=fopen(logFileOne,"a+");
-	fprintf(fp,"[%s]:%s#\n",Data,sstr);
+	fprintf(fp,"[%s]:%s#\n",Data,logstr);
 	fclose(fp);
 }
-void CCBKTcpKM2App::WriteSendRecvLog(CString sstr)
+
+void CCBKTcpKM2App::WriteLogTwo(LPCTSTR pstrFormat, ...)
 {
-	CTime curTime =CTime::GetCurrentTime();
-	CString Data=curTime.Format("%H:%M:%S");
+	CString logstr;
+	va_list avlist;
+	va_start(avlist, pstrFormat);
+	logstr.FormatV(pstrFormat, avlist);
+	va_end(avlist);
+	
+	CString Data;
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	Data.Format("%02d:%02d:%02d.%03d",st.wHour,st.wMinute,st.wSecond,st.wMilliseconds);
 	FILE *fp=fopen(logFileTwo,"a+");
-	fprintf(fp,"[%s]:[%s]\n",Data,sstr);
+	fprintf(fp,"[%s]:%s#\n",Data,logstr);
 	fclose(fp);
 }
-void CCBKTcpKM2App::WriteLogThree(CString sstr)
+
+void CCBKTcpKM2App::WriteLogThree(LPCTSTR pstrFormat, ...)
 {
-	CTime curTime =CTime::GetCurrentTime();
-	CString Data=curTime.Format("%H:%M:%S");
+	CString logstr;
+	va_list avlist;
+	va_start(avlist, pstrFormat);
+	logstr.FormatV(pstrFormat, avlist);
+	va_end(avlist);
+	
+	CString Data;
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	Data.Format("%02d:%02d:%02d.%03d",st.wHour,st.wMinute,st.wSecond,st.wMilliseconds);
 	FILE *fp=fopen(logFileThree,"a+");
-	fprintf(fp,"[%s]:[%s]\n",Data,sstr);
+	fprintf(fp,"[%s]:%s#\n",Data,logstr);
 	fclose(fp);
 }
+
 BOOL CCBKTcpKM2App::InitInstance() 
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -135,12 +161,11 @@ BOOL CCBKTcpKM2App::InitInstance()
 	{
 		CreateDirectory(tempPath,NULL);//
 	}
-	logFileOne.Format("%s\\CBKTcpKM2One日志文件.log",tempPath);
-	logFileTwo.Format("%s\\CBKTcpKM2Two日志文件.log",tempPath);
-	logFileThree.Format("%s\\CBKTcpKM2Three日志文件.log",tempPath);
+	logFileOne.Format("%s\\One日志文件一.log",tempPath);
+	logFileTwo.Format("%s\\Two日志文件二.log",tempPath);
+	logFileThree.Format("%s\\Three日志文件三.log",tempPath);
 	//////////////////////////////////////////////////////////////////////////
-	WriteLog("InitInstance START CBKTcpKM2 DLL! 2018031201");
-	
+	WriteLogOne("InitInstance START CBKTcpKM2 DLL! 20161206 10:28");	
 	//////////////////////////////////////////////////////////////////////////	
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -150,7 +175,7 @@ BOOL CCBKTcpKM2App::InitInstance()
 	
 	err = WSAStartup( wVersionRequested, &wsaData );
 	if ( err != 0 ) {
-		WriteLog("WSAStartup failed!");
+		WriteLogOne("WSAStartup failed!");
 		return FALSE;
 	}
 	
@@ -159,7 +184,7 @@ BOOL CCBKTcpKM2App::InitInstance()
         HIBYTE( wsaData.wVersion ) != 2 ) {
 		
 		WSACleanup();
-		WriteLog("WSAStartup Version failed!");
+		WriteLogOne("WSAStartup Version failed!");
 		return FALSE; 
 	}
 	if(m_socketz != NULL)
@@ -173,7 +198,7 @@ BOOL CCBKTcpKM2App::InitInstance()
 	addrSrv.sin_addr.S_un.S_addr=inet_addr(JGPTIP);
 	addrSrv.sin_family=AF_INET;
 	addrSrv.sin_port=htons(8889);
-	WriteLog(JGPTIP+":8889 20171013 1035");
+	WriteLogOne("%s,18889 20170313 09:58",JGPTIP);
 //	WriteLog(strPathvoice);
 	sendi=1;
 	ConnOK=FALSE;
@@ -199,8 +224,13 @@ BOOL CCBKTcpKM2App::InitInstance()
 			FindLogFile.Close();
 		}
 	}
+	bIPPWD=FALSE;
 	CString msendbuf;
-	msendbuf.Format("&TIME9-%d-%d*TIME9****#",CardNumi,rand()%100);
+// 	msendbuf.Format("&PWDDD-%d-%d*PWDDD****#",CardNumi,rand()%100);
+// 	m_sendList.AddTail(msendbuf);
+// 	msendbuf.Format("&IPPPP-%d-%d*IPPPP****#",CardNumi,rand()%100);
+// 	m_sendList.AddTail(msendbuf);
+	msendbuf.Format("&TIME9-%d-%d*TIME9*****#",CardNumi,rand()%100);
 	m_sendList.AddTail(msendbuf);
 	int forcount=GetPrivateProfileInt("DATA","COUNTL",0,".\\CSTRNOTSEND.dll");
 	for (int li=0;li<forcount;li++)
@@ -209,8 +239,15 @@ BOOL CCBKTcpKM2App::InitInstance()
 		if(GetPrivateProfileString("LISTSTR",linestr,"",getstr.GetBuffer(MAX_PATH),MAX_PATH,".\\CSTRNOTSEND.dll"))
 		{
 			getstr.ReleaseBuffer();
-			WriteLog("未上传数据:"+getstr);
-			m_sendList.AddTail(getstr);
+			msendbuf=Encode(getstr);
+			WriteLogOne("未上传数据:&"+msendbuf);
+			if (msendbuf.Left(2)!="&1")
+			{
+				msendbuf.Format("未上传数据不正确,%d=%s",li,getstr);
+				WriteLogOne(msendbuf);
+				continue;
+			}
+			m_sendList.AddTail(msendbuf);
 		}
 	}
 	CFileFind FindLogFile;
@@ -220,8 +257,6 @@ BOOL CCBKTcpKM2App::InitInstance()
 	}
 	//////////////////////////////////////////////////////////////////////////
 	g_SENDLIST_EVT.SetEvent();
-
-
 	for(int i=0;i<20;i++)
 	{
 		mytime[i].T52ST=1000;
@@ -241,25 +276,12 @@ BOOL CCBKTcpKM2App::InitInstance()
 	iSendCount=0;
 //	AfxBeginThread(CCBKTcpKM2App::SendThread,this);
 //	HsendThread=::CreateThread(NULL,0,SendThreadProc,NULL,0,0);
-	dllHandleJMQ = LoadLibrary(TEXT("CSendDataToJMQ.dll")); 
-	if (dllHandleJMQ == NULL) 
-	{ 
-		WriteLog("加载 CSendDataToJMQ.dll 失败!");
-		return FALSE;
-	}
-	dllsendtojmq = (DLLSendDataToJMQ) GetProcAddress(dllHandleJMQ,TEXT("SendJGPTData"));
-	dllInitjmqSocket =(DLLDInitSocket) GetProcAddress(dllHandleJMQ,TEXT("DInitSocket"));
-
 	return CWinApp::InitInstance();
 }
 
 int CCBKTcpKM2App::ExitInstance() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	if (dllHandleJMQ!=NULL)
-	{
-		FreeLibrary(dllHandleJMQ);
-	}
 	if(m_socketz)
 		closesocket(m_socketz);
 	WSAAsyncSelect(m_socketz, m_hWndz, 0, 0);	//释放套接字与窗口句柄的关联
@@ -271,7 +293,7 @@ int CCBKTcpKM2App::ExitInstance()
 		CFile::Remove("CSTRNOTSEND.dll");
 	}
 	//////////////////////////////////////////////////////////////////////////
-	CString linestr,writestr;
+	CString linestr,writestr,temp;
 	int countk=m_sendList.GetCount();
 	if (countk>0)
 	{
@@ -284,9 +306,9 @@ int CCBKTcpKM2App::ExitInstance()
 	for (int li=0;li<countk;li++)
 	{
 		linestr.Format("%d",li);
-		writestr.Format("%s",m_sendList.GetHead());
+		temp.Format("%s",m_sendList.GetHead());
+		writestr=Decode(temp);
 		::WritePrivateProfileString("LISTSTR",linestr,writestr,".\\CSTRNOTSEND.dll");		
-//		::WritePrivateProfileString("LISTSTR",linestr,writestr,".\\LISTSTR.ini");
 		m_sendList.RemoveHead();
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -346,7 +368,7 @@ int CCBKTcpKM2App::ExitInstance()
 	}     
 	filefind.Close(); 
 	//////////////////////////////////////////////////////////////////////////
-	WriteLog("ExitInstance CBKTcpKM2 DLL!");
+	WriteLogOne("ExitInstance CBKTcpKM2 DLL!");
 	return CWinApp::ExitInstance();
 }
 //////////////////////////////////////////////////////////////////////////
@@ -401,10 +423,10 @@ UINT CCBKTcpKM2App::ConnentThread(LPVOID Pparam)
 			break;
 		}
 		connect(dlg->m_socketz,(SOCKADDR*)&dlg->addrSrv,sizeof(SOCKADDR));
-		dlg->WriteLog("Connect .....Wait!");		
+		dlg->WriteLogOne("Connect .....Wait!");		
 		Sleep(3000);
 	}
-	dlg->WriteLog("ConnentThread .....break!");
+	dlg->WriteLogOne("ConnentThread .....break!");
 	conniii-=1;
 	return 0;
 }
@@ -452,7 +474,7 @@ BOOL CCBKTcpKM2App::InitSocketz(HWND hwndz)
 	if(m_socketz == INVALID_SOCKET)
 	{
 		AfxMessageBox("创建套接字失败!");
-		WriteLog("socket failed !");
+		WriteLogOne("socket failed !");
 		closesocket(m_socketz);
 		WSACleanup();
 		return FALSE;
@@ -460,22 +482,12 @@ BOOL CCBKTcpKM2App::InitSocketz(HWND hwndz)
 	//将网络事件与事件对象关联起来
 	if(WSAAsyncSelect(m_socketz, m_hWndz, UM_SOCKETZ, FD_CONNECT|FD_READ|FD_CLOSE) ==SOCKET_ERROR)
 	{
-		WriteLog("WSAAsyncSelect failed !");
+		WriteLogOne("WSAAsyncSelect failed !");
 		return FALSE;
 	}
 	ConnOK=FALSE;
 	AfxBeginThread(CCBKTcpKM2App::ConnentThread,this);
-	//conhThread= ::CreateThread(NULL,0,ConThreadProc,NULL,0,0);
-	
-	if (!dllInitjmqSocket(hwndz))
-	{
-		WriteLog("初始化解码器套接字失败!");
-	}
-	else
-	{
-		WriteLog("初始化解码器套接字OK 201710131034!");
-	}
-
+	//conhThread= ::CreateThread(NULL,0,ConThreadProc,NULL,0,0);	
 	return TRUE;
 }
 //////////////////////////////////////////////////////////////////////////
@@ -486,7 +498,7 @@ void CCBKTcpKM2App::OnConnect(SOCKET CurSock, int error)
 		if(CurSock == m_socketz)
 		{
 			ConnOK=TRUE;
-			WriteLog("成功连接到服务器!");
+			WriteLogOne("成功连接到服务器!");
 			::CreateThread(NULL,0,SendThreadProc,NULL,0,0);
 			/*
 			HsendThread=::CreateThread(NULL,0,SendThreadProc,NULL,0,0);
@@ -507,7 +519,7 @@ void CCBKTcpKM2App::OnConnect(SOCKET CurSock, int error)
 	}
 	else
 	{
-		WriteLog("连接到服务器失败!");
+		WriteLogOne("连接到服务器失败!");
 		//PostMessage(HWND_BROADCAST,WM_CONNFILD,0,0);
 //		sndPlaySound(strPathvoice,SND_SYNC);
 	}
@@ -515,21 +527,21 @@ void CCBKTcpKM2App::OnConnect(SOCKET CurSock, int error)
 void CCBKTcpKM2App::OnClose(SOCKET CurSock)
 {
 //结束与相应的客户端的通信，释放相应资源
-	WriteLog("中心退出,准备重连...");	
+	WriteLogOne("Socket is close ...%d 准备重连...",CurSock);	
 	if(m_socketz)
 		closesocket(m_socketz);
 	WSAAsyncSelect(m_socketz, m_hWndz, 0, 0);
 	m_socketz = socket(AF_INET, SOCK_STREAM,IPPROTO_TCP);//流类型的套接字 SOCK_STREAM
 	if(m_socketz == INVALID_SOCKET)
 	{
-		WriteLog("OnClose socket failed !");
+		WriteLogOne("OnClose socket failed !");
 		closesocket(m_socketz);
 		WSACleanup();
 		return ;
 	}
 	if(WSAAsyncSelect(m_socketz, m_hWndz, UM_SOCKETZ, FD_CONNECT|FD_READ/*|FD_WRITE*/|FD_CLOSE) ==SOCKET_ERROR)
 	{
-		WriteLog("WSAAsyncSelect failed !");
+		WriteLogOne("WSAAsyncSelect failed !");
 	}
 	ConnOK=FALSE;
 	CString JGPTIP;
@@ -557,12 +569,11 @@ void CCBKTcpKM2App::OnReceive(SOCKET CurSock)
 	if(SOCKET_ERROR==WSARecvFrom(CurSock,&wsabuf,1,&dwRead,&dwFlag,
 		(SOCKADDR*)&addrFrom,&len,NULL,NULL))
 	{
-		WriteLog("接收数据失败!");
+		WriteLogOne("接收数据失败!");
 		return ;
 	}
 	CString temp;
 	temp.Format("%s",wsabuf.buf);	
-//	WriteSendRecvLog("接收"+temp);
 	
 	if (1 ==temp.Replace("*","*"))
 	{
@@ -583,15 +594,11 @@ void CCBKTcpKM2App::OnReceive(SOCKET CurSock)
 
 			if (tmp2.Find(tmp1) != -1)
 			{
+				iSendCount=0;//返回就清零
 				WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
 				m_sendList.RemoveHead();//删除第一条
 				g_SENDLIST_EVT.SetEvent();
-				iSendCount=0;
-				if (tmp1.Find("17C51")!= -1)
-				{
-					dllsendtojmq(1,tmp2);
-				}
-
+				
 				if (tmp1.Find("17C52")!= -1)
 				{
 					mytime[SXMi].T52OK =timeGetTime();
@@ -603,48 +610,56 @@ void CCBKTcpKM2App::OnReceive(SOCKET CurSock)
 				}
 					
 				int errori=GetLastErrorStr(temp);
-				
-				/*
-				if (errori ==1 || errori ==-90)
-				{
-					
-					BOOL bIsListEmpty;
-
-					WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
-					bIsListEmpty = m_sendList.IsEmpty();
-					g_SENDLIST_EVT.SetEvent();
-
-					if(!bIsListEmpty)//1 和 -90 时还有未发数据 就继续发送
-					{
-						SendData();
-					}
-					
-				}*/
+	
 			}
 			else
 			{
 				CString logstr;
 				logstr.Format("返回值与列表值不一样:[%s!=%s]",tmp1,tmp2);
-				WriteLog(logstr);
+				WriteLogOne(logstr);
 			}
 		}
 		
 	}
 	else
 	{
-		WriteLog("返回值*号大于一个");
+		BOOL bIsListEmpty;				
+		WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
+		bIsListEmpty = m_sendList.IsEmpty();
+		g_SENDLIST_EVT.SetEvent();
+				
+		if(!bIsListEmpty)
+		{
+			CString tmp2;
+			WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
+			tmp2=m_sendList.GetHead();
+			g_SENDLIST_EVT.SetEvent();
+			
+			if (tmp2.Find("PWDDD") != -1)//密码可能有*号
+			{
+				iSendCount=0;//返回就清零
+				WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
+				m_sendList.RemoveHead();//删除第一条
+				g_SENDLIST_EVT.SetEvent();
+				GetLastErrorStr(temp);
+			}
+		}
+		g_SENDLIST_EVT.SetEvent();
+		WriteLogOne("返回值*号大于一个");
 	}
 	delete[] wsabuf.buf;//删除
 	connSumi=0;
+
 }
 //////////////////////////////////////////////////////////////////////////
 extern "C" __declspec( dllexport ) BOOL DInitSocket(HWND hwndd)
 {
 	if (!theApp.InitSocketz(hwndd))
 	{
-		theApp.WriteLog("InitSocketz faild!");
+		theApp.WriteLogOne("InitSocketz faild!");
 		return FALSE;
 	}
+	theApp.WriteLogOne("Socket Init DInitSocket success!");
 	return TRUE;
 }
 extern "C" __declspec( dllexport ) LRESULT OnSockTGPS(WPARAM wParam,LPARAM lParam)
@@ -672,249 +687,35 @@ extern "C" __declspec( dllexport ) LRESULT OnSockTGPS(WPARAM wParam,LPARAM lPara
 	return 0;
 }
 
-extern "C" __declspec( dllexport ) int SendString(UINT packi,LPTSTR strs)
+extern "C" __declspec( dllexport ) int SendStringToJG(UINT packi,LPTSTR packstr,LPTSTR strs)
 {
-	CString strlog;
-	if (111==packi)
-	{
-		return theApp.r111;
-	}
-	if (162==packi)
-	{
-		return theApp.r62;
-	}
-	if (172==packi)
-	{
-// 		strlog.Format("调用172 r=%d",theApp.r171);
-// 		theApp.WriteLogThree(strlog);
-		return theApp.r171;
-	}
-	if (134==packi)
-	{
-		return theApp.rCB3;
-	}
-	if (123==packi)
-	{
-		if (theApp.ConnOK==TRUE)//连接成功
-		{
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
-	}
-	if (91==packi)//新增加的
-	{
-		return theApp.B91;
-	}
-	if (11==packi)
-	{
-//		theApp.SendData();
-		return theApp.r11;
-	}
-	if (45==packi)
-	{
-//		theApp.SendData();
-		return theApp.D45;
-	}
-	if (66==packi)
-	{
-		if (theApp.DataIsEmpty()==FALSE)
-		{
-			theApp.WriteLogThree("66 date TRUE");
-			return TRUE;
-		}
-		else
-		{
-			theApp.WriteLogThree("66 date FALSE");
-			return FALSE;
-		}
-	}
-	if (55==packi)
-	{
-		return FALSE;
-	}
-	if (999==packi)
-	{
-		return theApp.fzb;
-	}
-	if (22==packi)
-	{
-		return theApp.fzb;
-	}
-	if (1==packi)
-	{
-		theApp.b17C56fz=FALSE;
-		theApp.SaveTime(1);
-		theApp.r11=FALSE;
-		theApp.r111=FALSE;
-	}
-	if (2==packi)
-	{
-		theApp.b17C56fz=FALSE;
-		theApp.B91=FALSE;
-		theApp.D45 = FALSE;
-		theApp.SaveTime(2);//保存17C52的时间
-		theApp.r55=FALSE;
-	}
-	if(3==packi)
-	{
-		theApp.SaveTime(3);
-	}
-	if (5==packi)
-	{
-		theApp.SaveTime(5);//
-		theApp.r55=FALSE;
-	}
-	
+	CString strHead;
 	CString msendbuf;
-	if (packi<10)
-	{		
-		msendbuf.Format("&17C5%d-%d-%d%s#",packi,theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if(packi==133)
-	{
-		theApp.rCB3=FALSE;
-		msendbuf.Format("$17CB3-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (packi==171)
-	{
-		theApp.r171=-1;
-		msendbuf.Format("&17D71-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-
-	//huangqiwei begin
-	//六合隆
-	else if (packi==811)
-	{
-		msendbuf.Format("&17E11-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if(packi==812)
-	{
-		msendbuf.Format("&17E12-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.Send17E12(msendbuf);
-		return TRUE;
-	}
-	//六合隆 end
-	//新天
-	else if (1321 == packi)
-	{
-		theApp.m_iCB2 = 0;
-		msendbuf.Format("&17CB2-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1322 == packi)
-	{
-		return theApp.m_iCB2;
-	}
-	else if (1331 == packi)
-	{
-		theApp.m_iCB3 = 0;
-		msendbuf.Format("&17CB3-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1332 == packi)
-	{
-		return theApp.m_iCB3;
-	}
-	//新天 end
-	else if (1341 == packi)
-	{
-		theApp.m_iZ03 = 0;
-		msendbuf.Format("&17Z03-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1342 == packi)
-	{
-		return theApp.m_iZ03;
-	}
-	else if (1351 == packi)
-	{
-		theApp.m_iZ04 = 0;
-		msendbuf.Format("&17Z04-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1352 == packi)
-	{
-		return theApp.m_iZ04;
-	}
-	else if (1361 == packi)
-	{
-		theApp.m_iY01 = 0;
-		msendbuf.Format("&17Y01-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1362 == packi)
-	{
-		return theApp.m_iY01;
-	}
-	else if (1371 == packi)
-	{
-		theApp.m_iC28 = 0;
-		msendbuf.Format("&17C28-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1372 == packi)
-	{
-		return theApp.m_iC28;
-	}
-	else if (1381 == packi)
-	{
-		theApp.m_iC29 = 0;
-		msendbuf.Format("&17C29-%d-%d%s#",theApp.CardNumi,theApp.sendi,strs);
-		theApp.WriteLogThree(msendbuf);
-	}
-	else if (1382 == packi)
-	{
-		return theApp.m_iC29;
-	}
-	//huangqiwei end
-	
-	else
-	{
-		msendbuf.Format("&17C%d-%d-%d%s#",packi,theApp.CardNumi,theApp.sendi,strs);
-		theApp.r62=FALSE;
-	}
-	//msendbuf.Format("17C5%d-%d-%d******%s",packi,theApp.CardNumi,theApp.sendi,strs);
-//	msendbuf.Format("&17C5%d-%d-%d%s#",packi,theApp.CardNumi,theApp.sendi,strs);
-	//msendbuf.Format("17C5%d_%d_%d*%d*%d*%d*%d*%d*%s",packi,theApp.CardNumi,theApp.sendi,theApp.sendi,theApp.sendi,theApp.sendi,theApp.sendi,theApp.sendi,strs);
-	CString jmqbuf;
-	jmqbuf.Format("%s",msendbuf);
-	if (9==packi)
-	{
-		theApp.dllsendtojmq(2,jmqbuf);
-		theApp.WriteLogThree("9==packi"+jmqbuf);
-		return FALSE;
-	}
-	if (packi==63)
-	{
-		WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
-		theApp.Send17C63(msendbuf);
-		g_SENDLIST_EVT.SetEvent();
-	}
-	else
-	{
-		WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
-		theApp.m_sendList.AddTail(msendbuf);
-		g_SENDLIST_EVT.SetEvent();
-	}
 	theApp.sendi+=1;
+	int rSendi=theApp.sendi;
+	strHead.Format("&%s-%d-%d",packstr,theApp.CardNumi,rSendi);
+	msendbuf.Format("%s%s#",strHead,strs);
+	::WritePrivateProfileString("JGPT",strHead,NULL,".\\CSTRNOTSEND.dll");
+	theApp.WriteLogThree(msendbuf);
+	WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
+	theApp.m_sendList.AddTail(msendbuf);
+	g_SENDLIST_EVT.SetEvent();	
+	return rSendi;
+}
 
-	if (packi >1 && packi<10)
-	{
-		theApp.dllsendtojmq(packi,jmqbuf);
-	}
-	return TRUE;
+extern "C" __declspec( dllexport ) int GetRCode(LPTSTR packstr,int packi)
+{
+	int icode;
+	CString strHead,temp;
+	strHead.Format("%s-%d-%d",packstr,theApp.CardNumi,packi);
+	GetPrivateProfileString("JGPT",strHead,"2017",temp.GetBuffer(MAX_PATH),MAX_PATH,".\\CSTRNOTSEND.dll");
+//	temp.ReleaseBuffer(0);
+	icode=atoi(temp);
+	return icode;
 }
 
 BOOL CCBKTcpKM2App::SendData()
-{
-	
+{	
 	BOOL bIsListEmpty;
 	WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
 	bIsListEmpty = m_sendList.IsEmpty();
@@ -925,7 +726,7 @@ BOOL CCBKTcpKM2App::SendData()
 		//WriteLog("没有要发送的数据!,size=0");
 		return FALSE;
 	}
-	if (timeGetTime()-sendtime<1000)
+	if (timeGetTime()-sendtime<300)
 	{
 		return TRUE;
 	}
@@ -936,7 +737,6 @@ BOOL CCBKTcpKM2App::SendData()
 	WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
 	msendbuf.Format("%s",m_sendList.GetHead());
 	g_SENDLIST_EVT.SetEvent();
-
 
 	if (msendbuf.Left(6)=="&17C52")
 	{
@@ -981,96 +781,57 @@ BOOL CCBKTcpKM2App::SendData()
 		}
 		TC53=timeGetTime();
 	}
+	CString enSendStr;
+	enSendStr=msendbuf;//Encode(msendbuf);//加密20151010
 	int len;
-	len=msendbuf.GetLength();	
+	len=enSendStr.GetLength();	
 	WSABUF wsabuf;
 	DWORD dwSend;
-	wsabuf.buf=msendbuf.GetBuffer(len);	
+	wsabuf.buf=enSendStr.GetBuffer(len);	
 	wsabuf.len=len+1;
 	iSendCount+=1;
-	if (iSendCount >=10)
+	if (iSendCount >100)
 	{
 		iSendCount=0;
 		OnClose(0);
-		WriteLog("连续发送10条没有接收到返回");
+		WriteLogOne("连续发送100条没有接收到返回");
+		return TRUE;
 	}
+
 	if(SOCKET_ERROR==WSASendTo(m_socketz,&wsabuf,1,&dwSend,0,
 		(SOCKADDR*)&addrSrv,sizeof(SOCKADDR),NULL,NULL))
 	{
-		WriteLog("发送的数据失败!WSASendTo:"+msendbuf);
+		WriteLogOne("发送的数据失败!WSASendTo:"+msendbuf);
 		connSumi+=1;
-		if(connSumi>10)
+		if(connSumi>100)
 		{
 			iSendCount=0;
 			connSumi=0;
 			OnClose(0);
-			WriteLog("OnClose(0)");
+			WriteLogOne("OnClose(0)");
 		}
 		return TRUE;
 	}
-
-	WriteSendRecvLog("发送"+msendbuf);
-//	theApp.TSend[theApp.xmii] =timeGetTime();
+	WriteLogTwo("发送"+msendbuf);
 	return TRUE;
 }
 
 int CCBKTcpKM2App::GetLastErrorStr(CString str)
 {
-	CString templ,tempr,msgstr;
+	CString templ,tempr,msgstr,tempkey;
 	templ.Format("%s",str.Left(5));
 	tempr.Format("%s",str.Mid(str.Find("*")+1));
+	tempkey.Format("%s",str.Left(str.Find("*")));
 	GetPrivateProfileString(templ,tempr,"未知返回值",msgstr.GetBuffer(MAX_PATH),MAX_PATH,".\\CBKTcpKM2.dat");
 	msgstr.ReleaseBuffer();
-	////////
-	//CString ttt;
-	//ttt.Format("%s,%s",templ,tempr);
-	//WriteSendRecvLog(ttt);
-	/////////
-	WriteSendRecvLog(str+msgstr);
+	::WritePrivateProfileString("JGPT",tempkey,tempr,".\\CSTRNOTSEND.dll");
+	if ("PWDDD"!=templ)
+	{
+		WriteLogTwo(str+msgstr);
+	}
 	fzb=TRUE;
-	if (templ=="17D71")
-	{
-		r171=atoi(tempr);
-		return 1;
-	}
-	if ("17Z03"==templ)
-	{
-		m_iZ03 = atoi(tempr);
-		return 1;
-	}
-	if ("17Z04"==templ)
-	{
-		m_iZ04 = atoi(tempr);
-		return 1;
-	}
-	if ("17Y01"==templ)
-	{
-		m_iY01 = atoi(tempr);
-		return 1;
-	}
-	if ("17C28"==templ)
-	{
-		m_iC28 = atoi(tempr);
-		return 1;
-	}
-	if ("17C29"==templ)
-	{
-		m_iC29 = atoi(tempr);
-		return 1;
-	}
-	if ("17CB2"==templ)
-	{
-		m_iCB2 = atoi(tempr);
-		return 1;
-	}
-	if ("17CB3"==templ)
-	{
-		m_iCB3 = atoi(tempr);
-		return 1;
-	}
 	if(!strcmp(tempr,"1"))
 	{	
-
 		if (templ=="17C51")
 		{
 			r11=TRUE;
@@ -1079,18 +840,7 @@ int CCBKTcpKM2App::GetLastErrorStr(CString str)
 		{
 			r55=TRUE;
 		}
-		if (templ=="17C62")
-		{
-			r62=TRUE;
-		}
 		return 1;
-	}
-	if (!strcmp(tempr,"100"))
-	{
-		if (templ=="17C51")
-		{
-			r111=TRUE;
-		}
 	}
 	if (!strcmp(tempr,"-90"))
 	{	
@@ -1102,11 +852,15 @@ int CCBKTcpKM2App::GetLastErrorStr(CString str)
 		{
 			r55=TRUE;
 		}
-		if (templ=="17C62")
-		{
-			r62=TRUE;
-		}
 		return -90;
+	}
+	if (!strcmp(tempr,"100"))
+	{
+		if (templ=="17C51")
+		{
+			r111=TRUE;
+			return 1;
+		}
 	}
 	if (!strcmp(tempr,"-2"))
 	{
@@ -1116,25 +870,19 @@ int CCBKTcpKM2App::GetLastErrorStr(CString str)
 			return 1;
 		}
 	}
-	if (!strcmp(tempr,"-91"))
-	{
-		if (templ=="17C52")
-		{
-			B91 = TRUE;			
-		}
-		return 1;
-	}
-	//20160804
-	if (templ=="17C56")
-	{
-		if (strcmp(tempr,"-1"))
-		{
-			b17C56fz=TRUE;
-		}
-	}	
 	if ("TIME9"==templ)
 	{
 		SetSysTime(tempr);
+		return 1;	
+	}
+	if ("PWDDD"==templ)
+	{
+		SetIPPWD(tempr,1);
+		return 1;	
+	}
+	if ("IPPPP"==templ)
+	{
+		SetIPPWD(tempr,2);
 		return 1;	
 	}
 	fzb=FALSE;
@@ -1143,8 +891,8 @@ int CCBKTcpKM2App::GetLastErrorStr(CString str)
 		AfxMessageBox(msgstr);
 		return -1000;
 	}
-	sndPlaySound(strPathvoice,SND_SYNC);
-//	WriteSendRecvLog("ERRORMSG:"+msgstr);
+//	sndPlaySound(strPathvoice,SND_SYNC);
+	WriteLogTwo("ERROR_MSG:"+msgstr);
 	AfxMessageBox(msgstr);
 	return atoi(tempr);
 }
@@ -1216,13 +964,63 @@ BOOL CCBKTcpKM2App::SetSysTime(CString strTime)
 	if(0==SetLocalTime(&st))//设置系统时间
 	{		
 		logstr.Format("设置本机时间为:%s 失败!",strTime);
-		WriteLog(logstr);
+		WriteLogOne(logstr);
 		return FALSE;
 	}	
 	logstr.Format("设置本机时间为:%s 成功!",strTime);
-	WriteLog(logstr);
+	WriteLogOne(logstr);
 	return TRUE;
 }
+
+CString CCBKTcpKM2App::Decode(CString str)
+{
+	CString outStr=_T("");
+	if (str.IsEmpty())
+	{
+		return outStr;
+	}
+	outStr=str;
+	outStr.MakeReverse();
+	int iLen =outStr.GetLength();	
+	for(int i=0;i<iLen;i++)
+	{		
+		if (i%3==0)
+		{
+			outStr.SetAt(i,outStr[i]+2);
+		}
+		else
+		{
+			outStr.SetAt(i,outStr[i]+1);
+		}
+	}
+	return outStr;
+}
+
+CString CCBKTcpKM2App::Encode(CString str)
+{
+	CString outStr=_T("");
+	if (str.IsEmpty())
+	{
+		return outStr;
+	}
+	outStr=str;
+	int iLen =outStr.GetLength();
+	
+	for(int i=0;i<iLen;i++)
+	{
+		if (i%3==0)
+		{
+			outStr.SetAt(i,outStr[i]-2);
+		}
+		else
+		{
+			outStr.SetAt(i,outStr[i]-1);
+		}
+	}
+	outStr.MakeReverse();
+	return outStr;
+}
+
 
 BOOL CCBKTcpKM2App::DataIsEmpty()
 {
@@ -1230,10 +1028,7 @@ BOOL CCBKTcpKM2App::DataIsEmpty()
 	WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
 	bIsListEmpty = m_sendList.IsEmpty();
 	g_SENDLIST_EVT.SetEvent();
-	if (b17C56fz==TRUE)
-	{
-		return TRUE;
-	}
+	
 	if (bIsListEmpty)
 	{
 		return FALSE;
@@ -1241,46 +1036,32 @@ BOOL CCBKTcpKM2App::DataIsEmpty()
 	return TRUE;
 }
 
-void CCBKTcpKM2App::Send17C63(CString str)
+void CCBKTcpKM2App::SetIPPWD(CString str,int itype)
 {
-	CString msendbuf;
-	msendbuf.Format("%s",str);
-	int len;
-	len=msendbuf.GetLength();	
-	WSABUF wsabuf;
-	DWORD dwSend;
-	wsabuf.buf=msendbuf.GetBuffer(len);	
-	wsabuf.len=len+1;
-
-	if(SOCKET_ERROR==WSASendTo(m_socketz,&wsabuf,1,&dwSend,0,
-		(SOCKADDR*)&addrSrv,sizeof(SOCKADDR),NULL,NULL))
+	CString temp;
+	temp=Decode(str);
+	if (itype==1)
 	{
-		WriteLog("发送的数据失败!Send17C63:"+msendbuf);		
+		::WritePrivateProfileString("PassWord","value",temp,".\\cfg.ini");//IP
+		WriteLogOne("设置数据库密码成功!");
 	}
 	else
 	{
-		WriteLogThree("发送"+msendbuf);
-	}
+		::WritePrivateProfileString("IPAddress","value",temp,".\\cfg.ini");//IP
+		WriteLogOne("设置数据库IP成功!");
+		bIPPWD=TRUE;
+	}	
 }
 
-void CCBKTcpKM2App::Send17E12(CString str)
+extern "C" __declspec( dllexport ) int GetSendSurPlus()
 {
-	CString msendbuf;
-	msendbuf.Format("%s",str);
-	int len;
-	len=msendbuf.GetLength();	
-	WSABUF wsabuf;
-	DWORD dwSend;
-	wsabuf.buf=msendbuf.GetBuffer(len);	
-	wsabuf.len=len+1;
-	
-	if(SOCKET_ERROR==WSASendTo(m_socketz,&wsabuf,1,&dwSend,0,
-		(SOCKADDR*)&addrSrv,sizeof(SOCKADDR),NULL,NULL))
-	{
-		WriteLog("发送的数据失败!Send17E12:"+msendbuf);		
-	}
-	else
-	{
-		WriteLogThree("发送"+msendbuf);
-	}
+	return theApp.GetListCount();
+}
+
+int CCBKTcpKM2App::GetListCount()
+{
+	WaitForSingleObject(g_SENDLIST_EVT.m_hObject,20);
+	int iListCount= m_sendList.GetCount();
+	g_SENDLIST_EVT.SetEvent();	
+	return iListCount;
 }

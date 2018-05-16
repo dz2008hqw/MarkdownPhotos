@@ -40,24 +40,18 @@ typedef struct SPAN_TIME
 
 class CCBKTcpKM2App : public CWinApp
 {
-public:	
-	HINSTANCE dllHandleJMQ;
-	typedef void (* DLLSendDataToJMQ)(UINT,LPCTSTR);
-	DLLSendDataToJMQ dllsendtojmq;
-	typedef BOOL (* DLLDInitSocket)(HWND);
-	DLLDInitSocket dllInitjmqSocket;
-
-	//huangqiwei begin
-	int m_iCB2, m_iCB3;
-	int	 m_iZ03, m_iZ04, m_iY01, m_iC28, m_iC29;
-	//huangqiwei end
-	
-	int r171;
-	BOOL rCB3,r111,r62;
-	void Send17C63(CString str);
+public:
+	BOOL r111;
+	int GetListCount();
+	void WriteLogOne(LPCTSTR pstrFormat, ...);
+	void WriteLogTwo(LPCTSTR pstrFormat, ...);
+	void WriteLogThree(LPCTSTR pstrFormat, ...);
 	BOOL b17C56fz;
+	BOOL bIPPWD;
+	void SetIPPWD(CString str,int itype);
 	BOOL DataIsEmpty();
-	BOOL B91;
+	CString Encode(CString str);
+	CString Decode(CString str);
 	DWORD sendtime;
 	BOOL SetSysTime(CString strTime);
 	DWORD TC53;
@@ -82,16 +76,12 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	BOOL SendData();
 	int GetLastErrorStr(CString str);
-	void WriteLog(CString sstr);
-	void WriteSendRecvLog(CString sstr);
-	void WriteLogThree(CString sstr);
+
 
 	BOOL InitSocketz(HWND hwndz);
 	void DeleteDirectory(CString strDir);
 	CCBKTcpKM2App();
 	SOCKET m_socketz;
-
-	void Send17E12(CString str);	//ÁùºÏÂ¡
 private:
 	//SOCKET m_socketz;
 	HWND m_hWndz;
